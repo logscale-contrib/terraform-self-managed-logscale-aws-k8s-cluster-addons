@@ -7,7 +7,7 @@ module "cert_manager_irsa" {
 
   oidc_providers = {
     main = {
-      provider_arn               = module.eks.oidc_provider_arn
+      provider_arn               = var.eks_oidc_provider_arn
       namespace_service_accounts = ["alb-manager:cw-aws-load-balancer-controller"]
     }
   }
@@ -17,7 +17,6 @@ module "cert_manager_irsa" {
 
 resource "helm_release" "alb-manager" {
   depends_on = [
-    module.eks,
     module.cert_manager_irsa,
     helm_release.promcrds,
     helm_release.cert-manager

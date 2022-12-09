@@ -1,8 +1,5 @@
 
 resource "helm_release" "promcrds" {
-  depends_on = [
-    module.eks
-  ]
   namespace        = "kube-system"
   create_namespace = true
 

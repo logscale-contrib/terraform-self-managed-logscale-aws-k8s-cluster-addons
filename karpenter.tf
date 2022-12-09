@@ -22,27 +22,27 @@ YAML
 
   set {
     name  = "settings.aws.clusterName"
-    value = module.eks.cluster_name
+    value = var.eks_cluster_name
   }
 
   set {
     name  = "settings.aws.clusterEndpoint"
-    value = module.eks.cluster_endpoint
+    value = var.eks_endpoint
   }
 
   set {
     name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
-    value = module.karpenter.irsa_arn
+    value = var.karpenter_irsa_arn
   }
 
   set {
     name  = "settings.aws.defaultInstanceProfile"
-    value = module.karpenter.instance_profile_name
+    value = var.karpenter_instance_profile_name
   }
 
   set {
     name  = "settings.aws.interruptionQueueName"
-    value = module.karpenter.queue_name
+    value = var.karpenter_queue_name
   }
 }
 
@@ -78,11 +78,11 @@ resource "kubectl_manifest" "karpenter_node_template" {
       name: default
     spec:
       subnetSelector:
-        karpenter.sh/discovery: ${module.eks.cluster_name}
+        karpenter.sh/discovery: ${var.eks_cluster_name}
       securityGroupSelector:
-        karpenter.sh/discovery: ${module.eks.cluster_name}
+        karpenter.sh/discovery: ${var.eks_cluster_name}
       tags:
-        karpenter.sh/discovery: ${module.eks.cluster_name}
+        karpenter.sh/discovery: ${var.eks_cluster_name}
   YAML
 
   depends_on = [

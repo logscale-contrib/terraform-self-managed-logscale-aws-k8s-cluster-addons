@@ -4,7 +4,7 @@
 ################################################################################
 
 data "aws_eks_cluster_auth" "this" {
-  name = module.eks.cluster_name
+  name = var.eks_cluster_name
 }
 
 locals {
@@ -13,16 +13,16 @@ locals {
     kind            = "Config"
     current-context = "terraform"
     clusters = [{
-      name = module.eks.cluster_name
+      name = var.eks_cluster_name
       cluster = {
-        certificate-authority-data = module.eks.cluster_certificate_authority_data
-        server                     = module.eks.cluster_endpoint
+        certificate-authority-data = var.eks_cluster_certificate_authority_data
+        server                     = var.eks_endpoint
       }
     }]
     contexts = [{
       name = "terraform"
       context = {
-        cluster = module.eks.cluster_name
+        cluster = var.eks_cluster_name
         user    = "terraform"
       }
     }]
@@ -64,7 +64,6 @@ resource "null_resource" "modify_kube_dns" {
 
     # We are maintaing the existing kube-dns service and annotating it for Helm to assume control
     command = <<-EOT
-      echo "Setting implicit dependency on ${module.eks.fargate_profiles["kube_system"].fargate_profile_pod_execution_role_arn}"
       kubectl --namespace kube-system annotate --overwrite service kube-dns meta.helm.sh/release-name=coredns --kubeconfig <(echo $KUBECONFIG | base64 --decode)
       kubectl --namespace kube-system annotate --overwrite service kube-dns meta.helm.sh/release-namespace=kube-system --kubeconfig <(echo $KUBECONFIG | base64 --decode)
       kubectl --namespace kube-system label --overwrite service kube-dns app.kubernetes.io/managed-by=Helm --kubeconfig <(echo $KUBECONFIG | base64 --decode)
@@ -84,7 +83,7 @@ data "aws_eks_addon_version" "this" {
   for_each = toset(["coredns"])
 
   addon_name         = each.value
-  kubernetes_version = module.eks.cluster_version
+  kubernetes_version = var.cluster_version
   most_recent        = true
 }
 

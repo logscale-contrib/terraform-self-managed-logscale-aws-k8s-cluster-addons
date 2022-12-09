@@ -1,7 +1,6 @@
 
 resource "helm_release" "cert-manager" {
   depends_on = [
-    module.eks,
     helm_release.promcrds
   ]
   namespace        = "cert-manager"
