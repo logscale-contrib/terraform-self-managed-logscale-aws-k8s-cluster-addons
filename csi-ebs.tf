@@ -31,7 +31,7 @@ module "irsa_csi_ebs_node" {
 
 module "release_csi_ebs" {
   source  = "terraform-module/release/helm"
-  version = "2.8.0"
+  version = "2.13.0"
 
   namespace  = "kube-system"
   repository = "https://kubernetes-sigs.github.io/aws-ebs-csi-driver"
