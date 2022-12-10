@@ -57,8 +57,10 @@ storageClasses:
     allowautoiopspergbincrease: "true"
 node:
     tolerations:
+    - key: CriticalAddonsOnly
+      operator: Exists    
     #Any tolerations used to control pod deployment should be here
-    - operator: "Exists"
+    #- operator: "Exists"
 EOF 
   ]
   set = [
