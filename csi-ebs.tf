@@ -24,7 +24,7 @@ module "release_csi_ebs" {
 
 
   app = {
-    release          = "ebs-csi"
+    name             = "ebs-csi"
     version          = "2.10.*"
     chart            = "aws-ebs-csi-driver"
     create_namespace = false
