@@ -10,14 +10,14 @@ module "irsa_edns" {
 
 
   attach_external_dns_policy    = true
-  external_dns_hosted_zone_arns = data.aws_route53_zone.selected.arn
+  external_dns_hosted_zone_arns = [data.aws_route53_zone.selected.arn]
 
   oidc_providers = {
     main = {
       provider_arn               = var.eks_oidc_provider_arn
       namespace_service_accounts = ["external-dns:external-dns"]
     }
-  }  
+  }
 }
 
 
@@ -25,20 +25,20 @@ module "release_edns" {
   source  = "terraform-module/release/helm"
   version = "2.8.0"
 
-  namespace        = "external-dns"
-  repository       = "https://charts.bitnami.com/bitnami"
-  
+  namespace  = "external-dns"
+  repository = "https://charts.bitnami.com/bitnami"
+
 
   app = {
-    name    = "cw"
-    version = "6.5.*"
-    chart   = "external-dns"
+    name             = "cw"
+    version          = "6.5.*"
+    chart            = "external-dns"
     create_namespace = true
-    wait    = true
-    deploy  = 1
+    wait             = true
+    deploy           = 1
   }
 
-   values = [<<EOF
+  values = [<<EOF
 topologySpreadConstraints:
   - maxSkew: 1
     topologyKey: topology.kubernetes.io/zone

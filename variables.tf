@@ -11,7 +11,7 @@ variable "eks_endpoint" {
   description = "(optional) describe your variable"
 }
 variable "eks_cluster_certificate_authority_data" {
-  type = string
+  type        = string
   description = "(optional) describe your variable"
 }
 
@@ -21,32 +21,32 @@ variable "eks_oidc_provider_arn" {
 }
 
 variable "cluster_version" {
-  type = string
+  type        = string
   description = "(optional) describe your variable"
 }
 
 variable "karpenter_queue_name" {
-  type = string
+  type        = string
   description = "(optional) describe your variable"
 }
 variable "karpenter_instance_profile_name" {
-  type = string
+  type        = string
   description = "(optional) describe your variable"
 }
 variable "karpenter_irsa_arn" {
-  type = string
+  type        = string
   description = "(optional) describe your variable"
 }
 variable "vpc_id" {
-  type = string
+  type        = string
   description = "(optional) describe your variable"
 }
 variable "region" {
-  type = string
+  type        = string
   description = "(optional) describe your variable"
 }
 
 variable "zone_id" {
-  type = string
+  type        = string
   description = "(optional) describe your variable"
 }
