@@ -4,7 +4,7 @@ module "cert_manager_irsa" {
   source = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
 
   role_name                              = "${var.uniqueName}_cert-manager_cw-aws-load-balancer-controller"
-  attach_load_balancer_controller_policy = true
+  attach_cert_manager_policy = true
 
   oidc_providers = {
     main = {
