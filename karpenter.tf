@@ -70,7 +70,10 @@ resource "kubectl_manifest" "karpenter_provisioner" {
           cpu: 1000
       providerRef:
         name: default
-      ttlSecondsAfterEmpty: 30
+      consolidation:
+        enabled: true
+      ttlSecondsUntilExpired: 2592000 # 30 Days = 60 * 60 * 24 * 30 Seconds;
+
   YAML
 
   depends_on = [
