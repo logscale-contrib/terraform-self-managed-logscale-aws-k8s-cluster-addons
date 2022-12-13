@@ -1,8 +1,8 @@
 
-module "cert_manager_irsa" {
+module "alb_manager_irsa" {
   source = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
 
-  role_name                              = "${var.uniqueName}_cert-manager_cw-aws-load-balancer-controller"
+  role_name                              = "${var.uniqueName}_alb-manager_cw-aws-load-balancer-controller"
   attach_load_balancer_controller_policy = true
 
   oidc_providers = {
@@ -47,10 +47,12 @@ tolerations:
 clusterName: ${var.uniqueName}
 enableCertManager: true
 
-rbac:
-    serviceAccount:
-        create: true
-        name: alb-manager
+serviceAccount:
+  create: true
+  name: cw-aws-load-balancer-controller
+  annotations:
+    eks.amazonaws.com/role-arn: ${module.alb_manager_irsa.iam_role_arn}
+
 
 podDisruptionBudget: 
     maxUnavailable: 1
