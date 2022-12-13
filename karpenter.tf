@@ -8,7 +8,7 @@ resource "helm_release" "karpenter" {
   name       = "karpenter"
   repository = "oci://public.ecr.aws/karpenter"
   chart      = "karpenter"
-  version    = "v0.19.3"
+  version    = "v0.20.0"
   timeout    = 600
   values = [<<YAML
 tolerations:
@@ -54,9 +54,17 @@ resource "kubectl_manifest" "karpenter_provisioner" {
       name: default
     spec:
       requirements:
+        - key: "karpenter.k8s.aws/instance-hypervisor"
+          operator: In
+          values: ["nitro"]
+        - key: "karpenter.k8s.aws/instance-local-nvme"
+          operator: DoesNotExist
         - key: karpenter.sh/capacity-type
           operator: In
           values: ["spot","on-demand"]
+        - key: "karpenter.k8s.aws/instance-category"
+          operator: In
+          values: ["c", "m", "r"]
       limits:
         resources:
           cpu: 1000
