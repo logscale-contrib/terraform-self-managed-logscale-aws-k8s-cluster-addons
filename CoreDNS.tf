@@ -7,33 +7,7 @@ data "aws_eks_cluster_auth" "this" {
   name = var.eks_cluster_name
 }
 
-locals {
-  kubeconfig = yamlencode({
-    apiVersion      = "v1"
-    kind            = "Config"
-    current-context = "terraform"
-    clusters = [{
-      name = var.eks_cluster_name
-      cluster = {
-        certificate-authority-data = var.eks_cluster_certificate_authority_data
-        server                     = var.eks_endpoint
-      }
-    }]
-    contexts = [{
-      name = "terraform"
-      context = {
-        cluster = var.eks_cluster_name
-        user    = "terraform"
-      }
-    }]
-    users = [{
-      name = "terraform"
-      user = {
-        token = data.aws_eks_cluster_auth.this.token
-      }
-    }]
-  })
-}
+
 
 # Separate resource so that this is only ever executed once
 resource "null_resource" "remove_default_coredns_deployment" {
@@ -41,14 +15,11 @@ resource "null_resource" "remove_default_coredns_deployment" {
 
   provisioner "local-exec" {
     interpreter = ["/bin/bash", "-c"]
-    environment = {
-      KUBECONFIG = base64encode(local.kubeconfig)
-    }
 
     # We are removing the deployment provided by the EKS service and replacing it through the self-managed CoreDNS Helm addon
     # However, we are maintaing the existing kube-dns service and annotating it for Helm to assume control
     command = <<-EOT
-      kubectl --namespace kube-system delete deployment coredns --kubeconfig <(echo $KUBECONFIG | base64 --decode)
+      kubectl --namespace kube-system delete deployment coredns
     EOT
   }
 }
@@ -58,15 +29,11 @@ resource "null_resource" "modify_kube_dns" {
 
   provisioner "local-exec" {
     interpreter = ["/bin/bash", "-c"]
-    environment = {
-      KUBECONFIG = base64encode(local.kubeconfig)
-    }
-
     # We are maintaing the existing kube-dns service and annotating it for Helm to assume control
     command = <<-EOT
-      kubectl --namespace kube-system annotate --overwrite service kube-dns meta.helm.sh/release-name=coredns --kubeconfig <(echo $KUBECONFIG | base64 --decode)
-      kubectl --namespace kube-system annotate --overwrite service kube-dns meta.helm.sh/release-namespace=kube-system --kubeconfig <(echo $KUBECONFIG | base64 --decode)
-      kubectl --namespace kube-system label --overwrite service kube-dns app.kubernetes.io/managed-by=Helm --kubeconfig <(echo $KUBECONFIG | base64 --decode)
+      kubectl --namespace kube-system annotate --overwrite service kube-dns meta.helm.sh/release-name=coredns
+      kubectl --namespace kube-system annotate --overwrite service kube-dns meta.helm.sh/release-namespace=kube-system
+      kubectl --namespace kube-system label --overwrite service kube-dns app.kubernetes.io/managed-by=Helm
     EOT
   }
 
