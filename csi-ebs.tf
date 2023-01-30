@@ -30,6 +30,9 @@ module "irsa_csi_ebs_node" {
 }
 
 module "release_csi_ebs" {
+  depends_on = [
+    kubectl_manifest.karpenter_provisioner
+  ]
   source  = "terraform-module/release/helm"
   version = "2.8.0"
 

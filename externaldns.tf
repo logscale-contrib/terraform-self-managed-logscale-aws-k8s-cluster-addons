@@ -22,6 +22,9 @@ module "irsa_edns" {
 
 
 module "release_edns" {
+  depends_on = [
+    kubectl_manifest.karpenter_provisioner
+  ]  
   source  = "terraform-module/release/helm"
   version = "2.8.0"
 

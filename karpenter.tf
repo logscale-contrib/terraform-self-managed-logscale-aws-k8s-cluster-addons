@@ -77,7 +77,8 @@ resource "kubectl_manifest" "karpenter_provisioner" {
   YAML
 
   depends_on = [
-    helm_release.karpenter
+    helm_release.karpenter,
+    kubectl_manifest.karpenter_node_template
   ]
 }
 
@@ -97,6 +98,6 @@ resource "kubectl_manifest" "karpenter_node_template" {
   YAML
 
   depends_on = [
-    helm_release.karpenter
+    helm_release.karpenter,
   ]
 }

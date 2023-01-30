@@ -19,7 +19,8 @@ resource "helm_release" "alb-manager" {
   depends_on = [
     module.cert_manager_irsa,
     helm_release.promcrds,
-    helm_release.cert-manager
+    helm_release.cert-manager,
+    kubectl_manifest.karpenter_provisioner
   ]
   namespace        = "alb-manager"
   create_namespace = true
