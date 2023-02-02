@@ -189,7 +189,7 @@ resource "kubectl_manifest" "karpenter_provisioner_storage_amd64" {
           operator: In
           values: ["nitro"]
         - key: "karpenter.k8s.aws/instance-local-nvme"
-          operator: Exist
+          operator: Exists
         - key: karpenter.sh/capacity-type
           operator: In
           values: ["spot","on-demand"]
@@ -233,7 +233,7 @@ resource "kubectl_manifest" "karpenter_provisioner_storage_arm64" {
           operator: In
           values: ["nitro"]
         - key: "karpenter.k8s.aws/instance-local-nvme"
-          operator: Exist
+          operator: Exists
         - key: karpenter.sh/capacity-type
           operator: In
           values: ["spot","on-demand"]
