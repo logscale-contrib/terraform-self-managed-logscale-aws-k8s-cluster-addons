@@ -64,7 +64,15 @@ resource "kubectl_manifest" "karpenter_provisioner" {
           values: ["spot","on-demand"]
         - key: "karpenter.k8s.aws/instance-category"
           operator: In
-          values: ["c", "m", "r"]
+          values: ["m"]
+        - key: kubernetes.io/os
+          operator: In
+          values:
+          - linux
+        - key: kubernetes.io/arch
+          operator: In
+          values:
+          - amd64          
       limits:
         resources:
           cpu: 1000
@@ -81,7 +89,182 @@ resource "kubectl_manifest" "karpenter_provisioner" {
     kubectl_manifest.karpenter_node_template
   ]
 }
+resource "kubectl_manifest" "karpenter_provisioner_compute_amd64" {
+  yaml_body = <<-YAML
+    apiVersion: karpenter.sh/v1alpha5
+    kind: Provisioner
+    metadata:
+      name: compute_amd64
+    spec:
+      requirements:
+        - key: "karpenter.k8s.aws/instance-hypervisor"
+          operator: In
+          values: ["nitro"]
+        - key: "karpenter.k8s.aws/instance-local-nvme"
+          operator: DoesNotExist
+        - key: karpenter.sh/capacity-type
+          operator: In
+          values: ["spot","on-demand"]
+        - key: "karpenter.k8s.aws/instance-category"
+          operator: In
+          values: ["c"]
+        - key: kubernetes.io/os
+          operator: In
+          values:
+          - linux
+        - key: kubernetes.io/arch
+          operator: In
+          values:
+          - amd64          
+      limits:
+        resources:
+          cpu: 1000
+      weight: 50
+      providerRef:
+        name: default
+      consolidation:
+        enabled: true
+      ttlSecondsUntilExpired: 2592000 # 30 Days = 60 * 60 * 24 * 30 Seconds;
 
+  YAML
+
+  depends_on = [
+    helm_release.karpenter,
+    kubectl_manifest.karpenter_node_template
+  ]
+}
+resource "kubectl_manifest" "karpenter_provisioner_compute_aarm64" {
+  yaml_body = <<-YAML
+    apiVersion: karpenter.sh/v1alpha5
+    kind: Provisioner
+    metadata:
+      name: compute_arm64
+    spec:
+      requirements:
+        - key: "karpenter.k8s.aws/instance-hypervisor"
+          operator: In
+          values: ["nitro"]
+        - key: "karpenter.k8s.aws/instance-local-nvme"
+          operator: DoesNotExist
+        - key: karpenter.sh/capacity-type
+          operator: In
+          values: ["spot","on-demand"]
+        - key: "karpenter.k8s.aws/instance-category"
+          operator: In
+          values: ["c"]
+        - key: kubernetes.io/os
+          operator: In
+          values:
+          - linux
+        - key: kubernetes.io/arch
+          operator: In
+          values:
+          - arm64          
+      limits:
+        resources:
+          cpu: 1000
+      weight: 51
+      providerRef:
+        name: default
+      consolidation:
+        enabled: true
+      ttlSecondsUntilExpired: 2592000 # 30 Days = 60 * 60 * 24 * 30 Seconds;
+
+  YAML
+
+  depends_on = [
+    helm_release.karpenter,
+    kubectl_manifest.karpenter_node_template
+  ]
+}
+resource "kubectl_manifest" "karpenter_provisioner_storage_amd64" {
+  yaml_body = <<-YAML
+    apiVersion: karpenter.sh/v1alpha5
+    kind: Provisioner
+    metadata:
+      name: storage_amd64
+    spec:
+      requirements:
+        - key: "karpenter.k8s.aws/instance-hypervisor"
+          operator: In
+          values: ["nitro"]
+        - key: "karpenter.k8s.aws/instance-local-nvme"
+          operator: Exist
+        - key: karpenter.sh/capacity-type
+          operator: In
+          values: ["spot","on-demand"]
+        - key: "karpenter.k8s.aws/instance-category"
+          operator: In
+          values: ["i"]
+        - key: kubernetes.io/os
+          operator: In
+          values:
+          - linux
+        - key: kubernetes.io/arch
+          operator: In
+          values:
+          - amd64          
+      limits:
+        resources:
+          cpu: 1000
+      weight: 50
+      providerRef:
+        name: default
+      consolidation:
+        enabled: true
+      ttlSecondsUntilExpired: 2592000 # 30 Days = 60 * 60 * 24 * 30 Seconds;
+
+  YAML
+
+  depends_on = [
+    helm_release.karpenter,
+    kubectl_manifest.karpenter_node_template
+  ]
+}
+resource "kubectl_manifest" "karpenter_provisioner_storage_arm64" {
+  yaml_body = <<-YAML
+    apiVersion: karpenter.sh/v1alpha5
+    kind: Provisioner
+    metadata:
+      name: storage_arm64
+    spec:
+      requirements:
+        - key: "karpenter.k8s.aws/instance-hypervisor"
+          operator: In
+          values: ["nitro"]
+        - key: "karpenter.k8s.aws/instance-local-nvme"
+          operator: Exist
+        - key: karpenter.sh/capacity-type
+          operator: In
+          values: ["spot","on-demand"]
+        - key: "karpenter.k8s.aws/instance-category"
+          operator: In
+          values: ["i"]
+        - key: kubernetes.io/os
+          operator: In
+          values:
+          - linux
+        - key: kubernetes.io/arch
+          operator: In
+          values:
+          - arm64          
+      limits:
+        resources:
+          cpu: 1000
+      weight: 51
+      providerRef:
+        name: default
+      consolidation:
+        enabled: true
+      ttlSecondsUntilExpired: 2592000 # 30 Days = 60 * 60 * 24 * 30 Seconds;
+
+  YAML
+
+  depends_on = [
+    helm_release.karpenter,
+    kubectl_manifest.karpenter_node_template
+  ]
+}
 resource "kubectl_manifest" "karpenter_node_template" {
   yaml_body = <<-YAML
     apiVersion: karpenter.k8s.aws/v1alpha1
