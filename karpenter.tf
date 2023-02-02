@@ -94,7 +94,7 @@ resource "kubectl_manifest" "karpenter_provisioner_compute_amd64" {
     apiVersion: karpenter.sh/v1alpha5
     kind: Provisioner
     metadata:
-      name: compute_amd64
+      name: compute-amd64
     spec:
       requirements:
         - key: "karpenter.k8s.aws/instance-hypervisor"
@@ -138,7 +138,7 @@ resource "kubectl_manifest" "karpenter_provisioner_compute_arm64" {
     apiVersion: karpenter.sh/v1alpha5
     kind: Provisioner
     metadata:
-      name: compute_arm64
+      name: compute-arm64
     spec:
       requirements:
         - key: "karpenter.k8s.aws/instance-hypervisor"
@@ -182,7 +182,7 @@ resource "kubectl_manifest" "karpenter_provisioner_storage_amd64" {
     apiVersion: karpenter.sh/v1alpha5
     kind: Provisioner
     metadata:
-      name: storage_amd64
+      name: storage-amd64
     spec:
       requirements:
         - key: "karpenter.k8s.aws/instance-hypervisor"
@@ -226,7 +226,7 @@ resource "kubectl_manifest" "karpenter_provisioner_storage_arm64" {
     apiVersion: karpenter.sh/v1alpha5
     kind: Provisioner
     metadata:
-      name: storage_arm64
+      name: storage-arm64
     spec:
       requirements:
         - key: "karpenter.k8s.aws/instance-hypervisor"
