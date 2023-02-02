@@ -19,7 +19,8 @@ module "cert_manager_irsa" {
 resource "helm_release" "cert-manager" {
   depends_on = [
     helm_release.promcrds,
-    kubectl_manifest.karpenter_provisioner
+    kubectl_manifest.karpenter_provisioner_general_amd64,
+    kubectl_manifest.karpenter_provisioner_general_arm64
   ]
   namespace        = "cert-manager"
   create_namespace = true
