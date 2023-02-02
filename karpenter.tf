@@ -46,12 +46,12 @@ YAML
   }
 }
 
-resource "kubectl_manifest" "karpenter_provisioner" {
+resource "kubectl_manifest" "karpenter_provisioner_general_amd64" {
   yaml_body = <<-YAML
     apiVersion: karpenter.sh/v1alpha5
     kind: Provisioner
     metadata:
-      name: default
+      name: general-amd64
     spec:
       requirements:
         - key: "karpenter.k8s.aws/instance-hypervisor"
@@ -72,10 +72,54 @@ resource "kubectl_manifest" "karpenter_provisioner" {
         - key: kubernetes.io/arch
           operator: In
           values:
-          - amd64          
+          - amd64
       limits:
         resources:
           cpu: 1000
+      providerRef:
+        name: default
+      consolidation:
+        enabled: true
+      ttlSecondsUntilExpired: 2592000 # 30 Days = 60 * 60 * 24 * 30 Seconds;
+
+  YAML
+
+  depends_on = [
+    helm_release.karpenter,
+    kubectl_manifest.karpenter_node_template
+  ]
+}
+resource "kubectl_manifest" "karpenter_provisioner_general_arm64" {
+  yaml_body = <<-YAML
+    apiVersion: karpenter.sh/v1alpha5
+    kind: Provisioner
+    metadata:
+      name: general-arm64
+    spec:
+      requirements:
+        - key: "karpenter.k8s.aws/instance-hypervisor"
+          operator: In
+          values: ["nitro"]
+        - key: "karpenter.k8s.aws/instance-local-nvme"
+          operator: DoesNotExist
+        - key: karpenter.sh/capacity-type
+          operator: In
+          values: ["spot","on-demand"]
+        - key: "karpenter.k8s.aws/instance-category"
+          operator: In
+          values: ["m"]
+        - key: kubernetes.io/os
+          operator: In
+          values:
+          - linux
+        - key: kubernetes.io/arch
+          operator: In
+          values:
+          - arm64
+      limits:
+        resources:
+          cpu: 1000
+      weight: 1
       providerRef:
         name: default
       consolidation:
@@ -119,7 +163,7 @@ resource "kubectl_manifest" "karpenter_provisioner_compute_amd64" {
       limits:
         resources:
           cpu: 1000
-      weight: 51
+      weight: 50
       providerRef:
         name: default
       consolidation:
@@ -163,7 +207,7 @@ resource "kubectl_manifest" "karpenter_provisioner_compute_arm64" {
       limits:
         resources:
           cpu: 1000
-      weight: 50
+      weight: 51
       providerRef:
         name: default
       consolidation:
