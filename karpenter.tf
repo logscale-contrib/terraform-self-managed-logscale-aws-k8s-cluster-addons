@@ -170,7 +170,10 @@ resource "kubectl_manifest" "karpenter_provisioner_compute_amd64" {
       consolidation:
         enabled: true
       ttlSecondsUntilExpired: 2592000 # 30 Days = 60 * 60 * 24 * 30 Seconds;
-
+      taints:
+        - key: workloadClass
+          value: compute
+          effect: NoSchedule
   YAML
 
   depends_on = [
@@ -214,7 +217,10 @@ resource "kubectl_manifest" "karpenter_provisioner_compute_arm64" {
       consolidation:
         enabled: true
       ttlSecondsUntilExpired: 2592000 # 30 Days = 60 * 60 * 24 * 30 Seconds;
-
+      taints:
+        - key: workloadClass
+          value: compute
+          effect: NoSchedule
   YAML
 
   depends_on = [
@@ -258,7 +264,10 @@ resource "kubectl_manifest" "karpenter_provisioner_storage_amd64" {
       consolidation:
         enabled: true
       ttlSecondsUntilExpired: 2592000 # 30 Days = 60 * 60 * 24 * 30 Seconds;
-
+      taints:
+        - key: workloadClass
+          value: nvme
+          effect: NoSchedule
   YAML
 
   depends_on = [
@@ -302,7 +311,10 @@ resource "kubectl_manifest" "karpenter_provisioner_storage_arm64" {
       consolidation:
         enabled: true
       ttlSecondsUntilExpired: 2592000 # 30 Days = 60 * 60 * 24 * 30 Seconds;
-
+      taints:
+        - key: workloadClass
+          value: nvme
+          effect: NoSchedule
   YAML
 
   depends_on = [
