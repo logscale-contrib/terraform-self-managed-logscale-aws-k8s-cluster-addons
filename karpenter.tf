@@ -73,7 +73,7 @@ resource "kubectl_manifest" "karpenter_provisioner_general_amd64" {
           operator: In
           values:
           - amd64
-      weight: 1
+      weight: 100
       limits:
         resources:
           cpu: 1000
