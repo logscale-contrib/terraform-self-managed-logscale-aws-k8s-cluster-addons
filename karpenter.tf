@@ -121,7 +121,7 @@ resource "kubectl_manifest" "karpenter_provisioner_general_arm64" {
       limits:
         resources:
           cpu: 1000
-      # weight: 1
+      weight: 99
       providerRef:
         name: default
       consolidation:
@@ -166,7 +166,7 @@ resource "kubectl_manifest" "karpenter_provisioner_compute_amd64" {
       limits:
         resources:
           cpu: 1000
-      weight: 51
+      weight: 90
       providerRef:
         name: default
       consolidation:
@@ -215,7 +215,7 @@ resource "kubectl_manifest" "karpenter_provisioner_compute_arm64" {
       limits:
         resources:
           cpu: 1000
-      weight: 50
+      weight: 91
       providerRef:
         name: default
       consolidation:
@@ -264,7 +264,7 @@ resource "kubectl_manifest" "karpenter_provisioner_storage_amd64" {
       limits:
         resources:
           cpu: 1000
-      weight: 61
+      weight: 80
       providerRef:
         name: default
       consolidation:
@@ -313,7 +313,7 @@ resource "kubectl_manifest" "karpenter_provisioner_storage_arm64" {
       limits:
         resources:
           cpu: 1000
-      weight: 60
+      weight: 81
       providerRef:
         name: default
       consolidation:
