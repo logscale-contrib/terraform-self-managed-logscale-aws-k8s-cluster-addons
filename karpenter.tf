@@ -119,7 +119,7 @@ resource "kubectl_manifest" "karpenter_provisioner_compute_amd64" {
       limits:
         resources:
           cpu: 1000
-      weight: 50
+      weight: 51
       providerRef:
         name: default
       consolidation:
@@ -133,7 +133,7 @@ resource "kubectl_manifest" "karpenter_provisioner_compute_amd64" {
     kubectl_manifest.karpenter_node_template
   ]
 }
-resource "kubectl_manifest" "karpenter_provisioner_compute_aarm64" {
+resource "kubectl_manifest" "karpenter_provisioner_compute_arm64" {
   yaml_body = <<-YAML
     apiVersion: karpenter.sh/v1alpha5
     kind: Provisioner
@@ -163,7 +163,7 @@ resource "kubectl_manifest" "karpenter_provisioner_compute_aarm64" {
       limits:
         resources:
           cpu: 1000
-      weight: 51
+      weight: 50
       providerRef:
         name: default
       consolidation:
@@ -207,7 +207,7 @@ resource "kubectl_manifest" "karpenter_provisioner_storage_amd64" {
       limits:
         resources:
           cpu: 1000
-      weight: 50
+      weight: 60
       providerRef:
         name: default
       consolidation:
@@ -251,7 +251,7 @@ resource "kubectl_manifest" "karpenter_provisioner_storage_arm64" {
       limits:
         resources:
           cpu: 1000
-      weight: 51
+      weight: 61
       providerRef:
         name: default
       consolidation:
