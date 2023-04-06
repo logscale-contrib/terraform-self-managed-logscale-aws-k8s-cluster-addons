@@ -4,7 +4,7 @@ resource "helm_release" "karpenter_crd" {
   create_namespace = true
 
   name       = "karpenter-crd"
-  repository = "oci://public.ecr.aws/karpenter/karpenter-crd"
+  repository = "oci://public.ecr.aws/karpenter"
   chart      = "karpenter-crd"
   version    = "v0.27.1"
   timeout    = 600
