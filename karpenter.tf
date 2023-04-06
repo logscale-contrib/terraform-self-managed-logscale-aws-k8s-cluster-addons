@@ -1,14 +1,26 @@
 
+resource "helm_release" "karpenter_crd" {
+  namespace        = "karpenter"
+  create_namespace = true
 
+  name       = "karpenter-crd"
+  repository = "oci://public.ecr.aws/karpenter-crd"
+  chart      = "karpenter-crd"
+  version    = "v0.27.1"
+  timeout    = 600
+}
 
 resource "helm_release" "karpenter" {
+  depends_on = [
+    helm_release.karpenter_crd
+  ]
   namespace        = "karpenter"
   create_namespace = true
 
   name       = "karpenter"
   repository = "oci://public.ecr.aws/karpenter"
   chart      = "karpenter"
-  version    = "v0.23.0"
+  version    = "v0.27.1"
   timeout    = 600
   values = [<<YAML
 tolerations:
