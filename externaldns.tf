@@ -35,7 +35,7 @@ module "release_edns" {
 
   app = {
     name             = "cw"
-    version          = "6.5.*"
+    version          = "6.17.0"
     chart            = "external-dns"
     create_namespace = true
     wait             = true

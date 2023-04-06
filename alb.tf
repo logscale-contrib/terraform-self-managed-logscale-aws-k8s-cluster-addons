@@ -29,7 +29,7 @@ resource "helm_release" "alb-manager" {
   name       = "cw"
   repository = "https://aws.github.io/eks-charts"
   chart      = "aws-load-balancer-controller"
-  version    = "1.4.*"
+  version    = "1.4.8"
 
 
   values = [<<EOF
