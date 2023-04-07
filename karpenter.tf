@@ -130,7 +130,7 @@ resource "kubectl_manifest" "karpenter_provisioner_general_arm64" {
           operator: In
           values:
           #For now this is required because humio operator has incorrect affinity rules
-          - amd64
+          - arm64
       limits:
         resources:
           cpu: 1000
