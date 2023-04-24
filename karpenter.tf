@@ -23,13 +23,14 @@ resource "helm_release" "karpenter" {
   version    = "v0.27.3"
   timeout    = 600
   values = [<<YAML
-resources:
-  limits:
-    cpu: "250m"
-    memory: 250Mi
-  requests:
-    cpu: "250m"
-    memory: 250Mi
+controller:
+  resources:
+    limits:
+      cpu: "250m"
+      memory: 250Mi
+    requests:
+      cpu: "250m"
+      memory: 250Mi
 topologySpreadConstraints:
   - maxSkew: 1
     topologyKey: topology.kubernetes.io/zone
