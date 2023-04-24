@@ -20,7 +20,7 @@ resource "helm_release" "karpenter" {
   name       = "karpenter"
   repository = "oci://public.ecr.aws/karpenter"
   chart      = "karpenter"
-  version    = "v0.27.1"
+  version    = "v0.27.3"
   timeout    = 600
   values = [<<YAML
 tolerations:
@@ -29,6 +29,8 @@ tolerations:
   - key: "eks.amazonaws.com/compute-type"
     operator: "Equal"
     value: "fargate"
+aws:
+  enablePodENI: true
 YAML
   ]
 
