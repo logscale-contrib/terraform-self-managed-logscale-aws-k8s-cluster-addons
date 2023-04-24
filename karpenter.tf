@@ -38,8 +38,6 @@ topologySpreadConstraints:
     labelSelector:
       matchLabels:
         app.kubernetes.io/name: karpenter
-    matchLabelKeys:
-      - pod-template-hash
 tolerations:
   - key: CriticalAddonsOnly
     operator: Exists
